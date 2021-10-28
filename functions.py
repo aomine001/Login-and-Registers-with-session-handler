@@ -1,4 +1,5 @@
 import sqlite3
+from requests import get
 
 def userexists(user):
     connection = sqlite3.connect('users.db')
@@ -16,5 +17,8 @@ def userexists(user):
     if len(rows) != 0:
         return True
     else:
-        return False    
+        return False
     connection.close()
+def getip():
+    ip = get('https://api.ipify.org').text
+    return ip

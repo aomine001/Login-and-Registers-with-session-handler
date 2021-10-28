@@ -1,13 +1,12 @@
-from requests import get
 import sqlite3
 import hashlib
 import uuid
 import os
 import time
-
+import functions
 os.system('cls')
 
-ip = get('https://api.ipify.org').text
+ip = functions.getip()
 
 
 def CREATE_SESSION(ip, username):
@@ -25,9 +24,10 @@ def CREATE_SESSION(ip, username):
 
     print("Logged in with success!")
 
-    SESSION_CONNECTION.close()
     os.system('python login.py')
     exit()
+
+    SESSION_CONNECTION.close()
 def logout(ip):
     this_ip = ip
 
@@ -35,6 +35,8 @@ def logout(ip):
     SESSION_CURSOR=SESSION_CONNECTION.cursor()
 
     sql = 'DELETE FROM session WHERE ip="' + this_ip + '";'
+
+
 
     SESSION_CURSOR.execute(sql)
     SESSION_CONNECTION.commit()
@@ -44,26 +46,7 @@ def logout(ip):
 
     os.system('python login.py')
     exit()
-def CHECK_FOR_SESSION(ip):
-    username = ''
 
-    usersdb = sqlite3.connect('users.db')
-    userscursor = usersdb.cursor()
-
-    this_ip = ip
-    SESSION_CONNECTION=sqlite3.connect('SESSION.db')
-    SESSION_CURSOR=SESSION_CONNECTION.cursor()
-
-    sql = 'SELECT * FROM session WHERE ip="' + this_ip + '"'
-
-    SESSION_CURSOR.execute(sql)
-    SESSION_CONNECTION.commit()
-
-    rows = SESSION_CURSOR.fetchall()
-    try:
-        username = rows[0][2]
-    except IndexError:
-        pass
 
     sql2 = 'SELECT * FROM users WHERE log="' + username + '"'
 
@@ -97,6 +80,31 @@ def CHECK_FOR_SESSION(ip):
         return True
 
     SESSION_CONNECTION.close()
+def CHECK_FOR_SESSION(ip):
+    username = ''
+
+    usersdb = sqlite3.connect('users.db')
+    userscursor = usersdb.cursor()
+
+    this_ip = ip
+    SESSION_CONNECTION=sqlite3.connect('SESSION.db')
+    SESSION_CURSOR=SESSION_CONNECTION.cursor()
+
+    sql = 'SELECT * FROM session WHERE ip="' + this_ip + '"'
+
+    SESSION_CURSOR.execute(sql)
+    SESSION_CONNECTION.commit()
+
+    rows = SESSION_CURSOR.fetchall()
+    try:
+        username = rows[0][2]
+    except IndexError:
+        pass
+
+    if len(rows) != 0:
+        return True
+    else:
+        return False
 def login():
 
     useroption_login = input("Type here login")
@@ -119,11 +127,13 @@ def login():
     if length != 0:
         print('Logging in...')
 
-        if CHECK_FOR_SESSION(ip) == True:
+        if CHECK_FOR_SESSION(ip) != True:
+
             CREATE_SESSION(ip, useroption_login)
         else:
             os.system('python login.py')
             exit()
+
     else:
         print("User doesn't exist.")
         time.sleep(3)
@@ -132,7 +142,7 @@ def login():
 
     connection.close()
 def check():
-    if CHECK_FOR_SESSION(ip) != True:
+    if CHECK_FOR_SESSION(ip) != False:
         print("hello!")
         while True:
             print("-------------")
