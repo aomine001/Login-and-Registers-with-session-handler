@@ -46,10 +46,9 @@ def READ(com):
 
         rows = cursor.fetchall()
         print("--------------------------------------")
-        print("Username is: ", rows[0][0])
-        print("Is user banned? ", rows [0][2])
+        print("User ban status:", rows [0][2])
         print("--------------------------------------")
-        
+
         connection.close()
 
 
@@ -57,6 +56,6 @@ def READ(com):
         os.system('cls')
         exit()
 while True:
-    _=input("INT-SHELL=> ")
-    commands = _.split()
+    temponary=input("INT-SHELL=> ")
+    commands = temponary.split()
     READ(commands)
