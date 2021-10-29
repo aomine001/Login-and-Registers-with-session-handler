@@ -120,3 +120,22 @@ def CHECK_FOR_SESSION(ip):
         return True
     else:
         return False
+def checkuser(user,connection,cursor):
+    this_connection = connection
+    this_cursor = cursor
+    this_user = user
+
+    sql_code = 'SELECT * FROM users WHERE log="'+this_user+'"'
+
+    this_cursor.execute(sql_code)
+    this_connection.commit()
+
+    rows = cursor.fetchall()
+    founduser = len(rows)
+
+    if founduser != 0:
+        print("user already exists")
+        _=input()
+        exit()
+
+    return True

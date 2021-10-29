@@ -1,5 +1,6 @@
 import sqlite3
 import hashlib
+import functions
 
 def word_in(s):
    return " " not in s
@@ -7,25 +8,7 @@ def word_in(s):
 connection = sqlite3.connect('users.db')
 cursor = connection.cursor()
 
-def checkuser(user,con,cur):
-    this_connection = con
-    this_cursor = cur
-    this_user = user
 
-    sql_code = 'SELECT * FROM users WHERE log="'+this_user+'"'
-
-    this_cursor.execute(sql_code)
-    this_connection.commit()
-
-    rows = cursor.fetchall()
-    founduser = len(rows)
-
-    if founduser != 0:
-        print("user already exists")
-        _=input()
-        exit()
-
-    return True
 def createuser(log,pwd,con,cur):
     this_login = log
     this_password = pwd
@@ -76,7 +59,7 @@ if usrc_password == "" or usrc_confirm_password == "":
     print("Passwords are empty")
     _=input()
     exit()
-if checkuser(usrc_password,connection,cursor) != True:
+if functions.checkuser(usrc_password,connection,cursor) != True:
     print("user exists!")
 
 

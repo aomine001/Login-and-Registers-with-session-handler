@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import functions
+import functions
 
 os.system('cls')
 
@@ -9,11 +10,13 @@ def useroutput():
     C = temponary.split()
     try:
         if C[0] == "ban":
+
             try:
                 user = C[1]
             except IndexError:
                 print("Missing arguments, missing argument: user")
                 useroutput()
+
             if functions.userexists(user) != True:
                 print("This user doesn't exists!")
                 useroutput()
@@ -29,6 +32,8 @@ def useroutput():
             connection.close()
 
             print("Banned user: ", user)
+
+            useroutput()
         elif C[0] == "unban":
             try:
                 user = C[1]
@@ -75,6 +80,8 @@ def useroutput():
             print("--------------------------------------")
 
             connection.close()
+
+            useroutput()
         elif C[0] == "exit":
             os.system('cls')
             exit()
